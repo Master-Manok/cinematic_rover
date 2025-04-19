@@ -18,8 +18,10 @@ try:
     while True:
         if is_connected():
             led.on()
+            #print("Conected")
         else:
             led.off()
+            #print("Not Connected")
         sleep(interval)
 except:
     pass
