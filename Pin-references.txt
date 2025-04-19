@@ -1,19 +1,19 @@
 Rover Pins -
-31--gpio6
-33--gpio13
-35--gpio19
-37--gpio26
+31--gpio6 ~in4
+33--gpio13 ~in3
+35--gpio19 ~in2
+37--gpio26 ~in1
 
 Stepper Pins -
 //
-3--gpio2
-5--gpio3
+3--gpio2 ~dir
+5--gpio3 ~pulse
 //
-8--gpio14
-10--gpio15
+8--gpio14 ~dir
+10--gpio15 ~pulse
 
 Led pin -
-18--gpio24
+18--gpio24 ~power
 
 GND pins -
 39, 20
