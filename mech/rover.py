@@ -27,3 +27,7 @@ def mov_bck():
 def stop():
     Left.stop()
     Right.stop()
+
+def cleanup():
+    Left.close()
+    Right.close()

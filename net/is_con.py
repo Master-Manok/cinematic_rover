@@ -27,3 +27,6 @@ except:
     pass
 finally:
     led.close()
+
+def cleanup():
+    led.close()
