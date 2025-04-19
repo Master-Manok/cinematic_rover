@@ -13,20 +13,16 @@ def is_connected():
         return True
     except subprocess.CalledProcessError:
         return False
-    
-try:
-    while True:
+def indicate():  
+    try:
         if is_connected():
             led.on()
             #print("Conected")
         else:
             led.off()
             #print("Not Connected")
-        sleep(interval)
-except:
-    pass
-finally:
-    led.close()
+    except:
+        pass
 
 def cleanup():
     led.close()
