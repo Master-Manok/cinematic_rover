@@ -1,0 +1,19 @@
+Rover Pins -
+31--gpio6
+33--gpio13
+35--gpio19
+37--gpio26
+
+Stepper Pins -
+//
+3--gpio2
+5--gpio3
+//
+8--gpio14
+10--gpio15
+
+Led pin -
+18--gpio24
+
+GND pins -
+39, 20
