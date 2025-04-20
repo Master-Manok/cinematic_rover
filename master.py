@@ -78,7 +78,6 @@ def joystick():
     try:
         while True:
             # Get events to keep the system responsive
-            is_con.indicate()
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
@@ -111,17 +110,19 @@ def joystick():
 
             # print("tick") # uncomment to see how often the loop runs.
             pygame.time.delay(10)  # Add a small delay to reduce CPU usage. 10milliseconds
+            if (but==4):
+                break
 
     except KeyboardInterrupt:
         print("\nProgram terminated by user.")
     finally:
         pygame.quit()
-        if (but == 4):
+        if(but==4):
             record()
 if __name__ == "__main__":
     indi_thread= threading.Thread(target=is_con.indicate)
     indi_thread.daemon=True #set the thread as daemon thus this thread exits automatically when main thread exits
     indi_thread.start()
     joystick()
-    
+
 main_cleanup()
