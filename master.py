@@ -158,11 +158,9 @@ if __name__ == "__main__":
     indi_thread= threading.Thread(target=is_con.indicate)
     indi_thread.daemon=True #set the thread as daemon thus this thread exits automatically when main thread exits
     indi_thread.start()
-    joy_thread= threading.Thread(target=joystick)
-    joy_thread.daemon=True
-    joy_thread.start()
     cam_thread= threading.Thread(target=record)
     cam_thread.daemon=True
     cam_thread.start()
+    joystick()
 
 main_cleanup()
