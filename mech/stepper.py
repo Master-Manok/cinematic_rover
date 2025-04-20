@@ -1,5 +1,6 @@
 from gpiozero import DigitalOutputDevice
 from time import sleep
+import pygame
 
 steps_per_rev= 200
 speed= 100
@@ -30,6 +31,17 @@ def rot_yz(steps, direction):
         yz_step.off()
         sleep(delay_s)
 
+def rot(button,state):
+    if(button == 0 and state):
+        rot_yz(5,True)
+    elif(button == 2 and state):
+        rot_yz(5,False)
+    elif(button == 3 and state):
+        rot_xy(5,True)
+    elif(button == 1 and state):
+        rot_xy(5,False)
+    else:
+        xy_dir
 def cleanup():
     xy_dir.close()
     xy_step.close()

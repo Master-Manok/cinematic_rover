@@ -3,6 +3,7 @@ print("Hello I am CR!")
 from net import is_con
 from mech import rover,stepper
 import cv2 as cv
+import pygame
 
 def main_cleanup():
     is_con.cleanup()
@@ -56,3 +57,56 @@ def record():
 
     print(f"Video saved as {output_file}")
 
+def joystick():
+    """
+    Initializes pygame, reads gamepad input, and prints button and axis values.
+    """
+    pygame.init()
+    pygame.joystick.init()
+
+    # Check for the number of connected joysticks
+    if pygame.joystick.get_count() == 0:
+        print("No gamepads detected. Please connect a gamepad and try again.")
+        pygame.quit()
+        return
+
+    # Initialize the first gamepad (index 0)
+    gamepad = pygame.joystick.Joystick(0)
+    gamepad.init()
+
+    try:
+        while True:
+            # Get events to keep the system responsive
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    return
+
+                elif event.type == pygame.JOYBUTTONDOWN:
+                    but= event.button
+                    stepper.rot(but,True)
+                    print(f"Button {but} pressed")
+                elif event.type == pygame.JOYBUTTONUP:
+                    but= event.button
+                    stepper.rot(but,False)
+                    print(f"Button {but} released")
+                elif event.type == pygame.JOYAXISMOTION:
+                    axis = event.axis
+                    value = event.value
+                    rover.
+                    # print axis values, limit to 2 decimal places
+                    print(f"Axis {axis} value: {value:.2f}")
+                '''
+                elif event.type == pygame.JOYHATMOTION:
+                    hat = event.hat
+                    value = event.value
+                    print(f"Hat {hat} value: {value}")
+                '''
+
+            # print("tick") # uncomment to see how often the loop runs.
+            pygame.time.delay(10)  # Add a small delay to reduce CPU usage.
+
+    except KeyboardInterrupt:
+        print("\nProgram terminated by user.")
+    finally:
+        pygame.quit()
