@@ -3,26 +3,27 @@ from time import sleep
 
 Left= Motor(forward=26, backward=19)
 Right= Motor(forward=13, backward=6)
+sleep_time= 0.1
 
 def mov_for():
     Left.forward()
     Right.forward()
-    sleep(1)
+    sleep(sleep_time)
 
 def mov_rgt():
     Left.backward()
     Right.forward()
-    sleep(1)
+    sleep(sleep_time)
 
 def mov_lft():
     Left.forward()
     Right.backward()
-    sleep(1)
+    sleep(sleep_time)
 
 def mov_bck():
     Left.backward()
     Right.backward()
-    sleep(1)
+    sleep(sleep_time)
 
 def stop():
     Left.stop()

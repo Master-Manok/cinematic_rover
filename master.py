@@ -116,6 +116,9 @@ def joystick():
     gamepad = pygame.joystick.Joystick(0)
     gamepad.init()
     but=0
+    but_state=False
+    axis=None
+    value=0.0
     try:
         while True:
             # Get events to keep the system responsive
@@ -126,17 +129,19 @@ def joystick():
 
                 elif event.type == pygame.JOYBUTTONDOWN:
                     but= event.button
-                    stepper.rot(but,True)
+                    but_state=True
+                    #stepper.rot(but,True)
                     print(f"Button {but} pressed")
 
                 elif event.type == pygame.JOYBUTTONUP:
                     but= event.button
-                    stepper.rot(but,False)
+                    but_state=False
+                    #stepper.rot(but,False)
                     print(f"Button {but} released")
                 elif event.type == pygame.JOYAXISMOTION:
                     axis = event.axis
                     value = event.value
-                    rover.moment(axis,value)
+                    #rover.moment(axis,value)
                     # print axis values, limit to 2 decimal places
                     print(f"Axis {axis} value: {value:.2f}")
                 '''
@@ -145,7 +150,8 @@ def joystick():
                     value = event.value
                     print(f"Hat {hat} value: {value}")
                 '''
-
+            rover.moment(axis,value)
+            stepper.rot(but,but_state)
             # print("tick") # uncomment to see how often the loop runs.
             pygame.time.delay(10)  # Add a small delay to reduce CPU usage. 10milliseconds
 
