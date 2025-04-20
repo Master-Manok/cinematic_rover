@@ -65,7 +65,7 @@ def record():
                 print("Recording started!")
                 now = dt.datetime.now()
                 f_datetime = now.strftime("%Y%m%d_%H%M%S")
-                output_dir = r"D:/"  # Use raw string for the directory
+                output_dir = r"/home/mpi/Videos"  # Use raw string for the directory
                 output_file = os.path.join(output_dir, f"output_{f_datetime}.avi")
                 print(f"Output file path: {output_file}")  # Print the absolute file path to help debug
                 # Ensure the directory exists
