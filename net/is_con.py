@@ -17,6 +17,7 @@ def indicate():
     try:
         if is_connected():
             led.on()
+            sleep(interval)
             #print("Conected")
         else:
             led.off()

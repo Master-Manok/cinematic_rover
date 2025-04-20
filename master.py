@@ -4,6 +4,7 @@ from net import is_con
 from mech import rover,stepper
 import cv2 as cv
 import pygame
+import threading
 
 def main_cleanup():
     is_con.cleanup()
@@ -73,10 +74,11 @@ def joystick():
     # Initialize the first gamepad (index 0)
     gamepad = pygame.joystick.Joystick(0)
     gamepad.init()
-
+    but=0
     try:
         while True:
             # Get events to keep the system responsive
+            is_con.indicate()
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
@@ -84,8 +86,12 @@ def joystick():
 
                 elif event.type == pygame.JOYBUTTONDOWN:
                     but= event.button
-                    stepper.rot(but,True)
+                    if (but != 4 and but != 5):
+                        stepper.rot(but,True)
+                    else:
+                        break
                     print(f"Button {but} pressed")
+
                 elif event.type == pygame.JOYBUTTONUP:
                     but= event.button
                     stepper.rot(but,False)
@@ -104,9 +110,18 @@ def joystick():
                 '''
 
             # print("tick") # uncomment to see how often the loop runs.
-            pygame.time.delay(10)  # Add a small delay to reduce CPU usage.
+            pygame.time.delay(10)  # Add a small delay to reduce CPU usage. 10milliseconds
 
     except KeyboardInterrupt:
         print("\nProgram terminated by user.")
     finally:
         pygame.quit()
+        if (but == 4):
+            record()
+if __name__ == "__main__":
+    indi_thread= threading.Thread(target=is_con.indicate)
+    indi_thread.daemon=True #set the thread as daemon thus this thread exits automatically when main thread exits
+    indi_thread.start()
+    joystick()
+    
+main_cleanup()
