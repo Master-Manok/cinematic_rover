@@ -13,7 +13,7 @@ def main_cleanup():
     stepper.cleanup()
 
 def record():
-    web_cam= cv.VideoCapture(0)
+    web_cam = cv.VideoCapture(0)
     if not web_cam.isOpened():
         print("Error: Could not open camera.")
         exit()
@@ -22,15 +22,13 @@ def record():
     frame_width = int(web_cam.get(cv.CAP_PROP_FRAME_WIDTH))
     frame_height = int(web_cam.get(cv.CAP_PROP_FRAME_HEIGHT))
 
-
     # Define the codec and create a VideoWriter object to save the video.
     # FourCC is a 4-character code specifying the video codec.
     # 'XVID' is a common codec; you can try others like 'MJPG', 'MP4V', or 'H264' (if available).
     fourcc = cv.VideoWriter_fourcc(*'XVID')  # Or try:  cv2.VideoWriter_fourcc(*'MJPG')
-    output_file = 'output.avi'  # Name of the output video file
     fps = 30.0  # Frames per second
-    out = cv.VideoWriter(output_file, fourcc, fps, (frame_width, frame_height))
-    record_state=False
+    out = None  # Initialize VideoWriter object
+    record_state = False
 
     # Main loop to read frames from the camera and save them.
     while True:
@@ -42,32 +40,63 @@ def record():
             break  # Exit the loop if we can't get a frame
 
         # Write the frame to the output video file.
-        if (record_state):
-            out.write(frame)
+        if record_state and out is not None:
+            try:
+                out.write(frame)
+            except Exception as e:
+                print(f"Error writing frame: {e}")
+                record_state = False #stop recording on error
+                if out is not None:
+                    out.release()
+                out = None
+                print(f"Video recording stopped due to error.")
 
         # Display the captured frame in a window (optional, for preview).
         cv.imshow('Webcam Recording', frame)
 
         # Wait for a key press.  'q' to quit.
-        keypress=cv.waitKey(1)
+        keypress = cv.waitKey(1)
         if keypress & 0xFF == ord('q'):
             break
         elif keypress & 0xFF == ord('r'):
-            record_state != record_state
-            if(record_state):
+            record_state = not (record_state)
+            if record_state:
                 print("Recording started!")
+                now = dt.datetime.now()
+                f_datetime = now.strftime("%Y%m%d_%H%M%S")
+                output_dir = r"D:/"  # Use raw string for the directory
+                output_file = os.path.join(output_dir, f"output_{f_datetime}.avi")
+                print(f"Output file path: {output_file}")  # Print the absolute file path to help debug
+                # Ensure the directory exists
+                try:
+                    os.makedirs(output_dir, exist_ok=True)
+                except Exception as e:
+                    print(f"Error creating directory: {e}")
+                    print(f"Directory not created: {output_dir}")
+                    record_state = False # Stop recording.
+                    out = None
+                    continue # go to the next iteration of the loop
+                try:
+                    out = cv.VideoWriter(output_file, fourcc, fps, (frame_width, frame_height))
+                except Exception as e:
+                    print(f"Error creating VideoWriter: {e}")
+                    print(f"Could not create writer for {output_file}")
+                    record_state = False #stop recording
+                    out = None
+                    continue #next iteration
             else:
-                out.release()
+                if out is not None:
+                    out.release()
+                print(f"Video saved as {output_file}")
                 print("Recording stopped!")
 
     # Release the camera and the VideoWriter object.  Important to free resources.
     web_cam.release()
-    out.release()
+    if out is not None:
+        out.release()  # Release only if it was initialized
 
     # Destroy all windows (optional, but good practice).
     cv.destroyAllWindows()
-
-    print(f"Video saved as {output_file}")
 
 def joystick():
     """
