@@ -3,6 +3,12 @@ print("Hello I am CR!")
 from net import is_con
 from mech import rover,stepper
 import cv2 as cv
+
+def main_cleanup():
+    is_con.cleanup()
+    rover.cleanup()
+    stepper.cleanup()
+
 def record():
     web_cam= cv.VideoCapture(0)
     if not web_cam.isOpened():
@@ -50,7 +56,3 @@ def record():
 
     print(f"Video saved as {output_file}")
 
-def main_cleanup():
-    is_con.cleanup()
-    rover.cleanup()
-    stepper.cleanup()
