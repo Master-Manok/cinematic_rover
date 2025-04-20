@@ -41,7 +41,11 @@ def rot(button,state):
     elif(button == 1 and state):
         rot_xy(5,False)
     else:
-        xy_dir
+        xy_dir.off()
+        xy_step.off()
+        yz_dir.off()
+        yz_step.off()
+
 def cleanup():
     xy_dir.close()
     xy_step.close()

@@ -28,6 +28,22 @@ def stop():
     Left.stop()
     Right.stop()
 
+def moment(axis,val):
+    if (axis == 0 and val>0.99):
+        stop()
+        mov_rgt()
+    elif (axis == 0 and val<-0.99):
+        stop()
+        mov_lft()
+    elif (axis == 1 and val>0.99):
+        stop()
+        mov_for()
+    elif (axis == 1 and val<-0.99):
+        stop()
+        mov_bck()
+    else:
+        stop()
+
 def cleanup():
     Left.close()
     Right.close()

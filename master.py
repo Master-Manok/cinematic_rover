@@ -93,7 +93,7 @@ def joystick():
                 elif event.type == pygame.JOYAXISMOTION:
                     axis = event.axis
                     value = event.value
-                    rover.
+                    rover.moment(axis,value)
                     # print axis values, limit to 2 decimal places
                     print(f"Axis {axis} value: {value:.2f}")
                 '''
