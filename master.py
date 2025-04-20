@@ -5,6 +5,7 @@ from mech import rover,stepper
 import cv2 as cv
 import pygame
 import threading
+import datetime as dt
 
 def main_cleanup():
     is_con.cleanup()
@@ -29,6 +30,7 @@ def record():
     output_file = 'output.avi'  # Name of the output video file
     fps = 30.0  # Frames per second
     out = cv.VideoWriter(output_file, fourcc, fps, (frame_width, frame_height))
+    record_state=False
 
     # Main loop to read frames from the camera and save them.
     while True:
@@ -40,14 +42,23 @@ def record():
             break  # Exit the loop if we can't get a frame
 
         # Write the frame to the output video file.
-        out.write(frame)
+        if (record_state):
+            out.write(frame)
 
         # Display the captured frame in a window (optional, for preview).
         cv.imshow('Webcam Recording', frame)
 
         # Wait for a key press.  'q' to quit.
-        if cv.waitKey(1) & 0xFF == ord('q'):
+        keypress=cv.waitKey(1)
+        if keypress & 0xFF == ord('q'):
             break
+        elif keypress & 0xFF == ord('r'):
+            record_state != record_state
+            if(record_state):
+                print("Recording started!")
+            else:
+                out.release()
+                print("Recording stopped!")
 
     # Release the camera and the VideoWriter object.  Important to free resources.
     web_cam.release()
@@ -85,10 +96,7 @@ def joystick():
 
                 elif event.type == pygame.JOYBUTTONDOWN:
                     but= event.button
-                    if (but != 4 and but != 5):
-                        stepper.rot(but,True)
-                    else:
-                        break
+                    stepper.rot(but,True)
                     print(f"Button {but} pressed")
 
                 elif event.type == pygame.JOYBUTTONUP:
@@ -110,19 +118,21 @@ def joystick():
 
             # print("tick") # uncomment to see how often the loop runs.
             pygame.time.delay(10)  # Add a small delay to reduce CPU usage. 10milliseconds
-            if (but==4):
-                break
 
     except KeyboardInterrupt:
         print("\nProgram terminated by user.")
     finally:
         pygame.quit()
-        if(but==4):
-            record()
+
 if __name__ == "__main__":
     indi_thread= threading.Thread(target=is_con.indicate)
     indi_thread.daemon=True #set the thread as daemon thus this thread exits automatically when main thread exits
     indi_thread.start()
-    joystick()
+    joy_thread= threading.Thread(target=joystick)
+    joy_thread.daemon=True
+    joy_thread.start()
+    cam_thread= threading.Thread(target=record)
+    cam_thread.daemon=True
+    cam_thread.start()
 
 main_cleanup()
