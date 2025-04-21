@@ -2,11 +2,15 @@
 print("Hello I am CR!")
 from net import is_con
 from mech import rover,stepper
+from detect import detect as dtf
 import cv2 as cv
 import pygame
 import threading
 import datetime as dt
 import os
+#global values
+record_state=False
+facedetection_state=False
 
 def main_cleanup():
     is_con.cleanup()
@@ -14,6 +18,9 @@ def main_cleanup():
     stepper.cleanup()
 
 def record():
+    global record_state, facedetection_state
+    scale_x=1, scale_y=1
+
     web_cam = cv.VideoCapture(0)
     if not web_cam.isOpened():
         print("Error: Could not open camera.")
@@ -29,12 +36,18 @@ def record():
     fourcc = cv.VideoWriter_fourcc(*'XVID')  # Or try:  cv2.VideoWriter_fourcc(*'MJPG')
     fps = 30.0  # Frames per second
     out = None  # Initialize VideoWriter object
-    record_state = False
 
     # Main loop to read frames from the camera and save them.
     while True:
         # Read a frame from the camera.  ret is True if the frame was read successfully.
         ret, frame = web_cam.read()
+
+        if facedetection_state:
+            dx,dy= dtf.loc_face(frame,frame_width,frame_height)
+            x_dir= True if (dx>=0) else False
+            y_dir= True if (dy>=0) else False
+            stepper.rot_xy(round(abs(dx*scale_x)) ,x_dir)
+            stepper.rot_yz(round(abs(dy*scale_y)) , y_dir)
 
         if not ret:
             print("Error: Could not read frame.")
@@ -100,6 +113,7 @@ def record():
     cv.destroyAllWindows()
 
 def joystick():
+    global record_state, facedetection_state
     """
     Initializes pygame, reads gamepad input, and prints button and axis values.
     """
@@ -126,7 +140,6 @@ def joystick():
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     return
-
                 elif event.type == pygame.JOYBUTTONDOWN:
                     but= event.button
                     but_state=True
@@ -150,6 +163,15 @@ def joystick():
                     value = event.value
                     print(f"Hat {hat} value: {value}")
                 '''
+
+                if record_state and facedetection_state and (but not in [4,5]):
+                    pygame.time.delay(10)
+                    continue #skips the gamepad input events when recording started and facedetection enabled
+                if but == 4:
+                    record_state = not(record_state)
+                elif but == 5:
+                    facedetection_state = not(facedetection_state)
+
             rover.moment(axis,value)
             stepper.rot(but,but_state)
             # print("tick") # uncomment to see how often the loop runs.
