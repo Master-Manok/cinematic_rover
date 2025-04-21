@@ -3,7 +3,7 @@ from time import sleep
 import pygame
 
 steps_per_rev= 200
-speed= 500
+speed= 100
 microstepping=1
 
 delay_s= 60.0/(steps_per_rev*speed)/microstepping
