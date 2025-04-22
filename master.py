@@ -50,7 +50,7 @@ def record():
             y_dir= True if (dy>=0) else False
             dx= abs(round(dx))
             dy= abs(round(dy))
-            print(f"dx:{dx}, dy:{dy}")
+            #print(f"dx:{dx}, dy:{dy}")
             if dx<10:
                 dx=0
                 scale_x=0.3
