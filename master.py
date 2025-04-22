@@ -36,7 +36,7 @@ def record():
     # FourCC is a 4-character code specifying the video codec.
     # 'XVID' is a common codec; you can try others like 'MJPG', 'MP4V', or 'H264' (if available).
     fourcc = cv.VideoWriter_fourcc(*'XVID')  # Or try:  cv2.VideoWriter_fourcc(*'MJPG')
-    fps = 30.0  # Frames per second
+    fps = 10.0  # Frames per second
     out = None  # Initialize VideoWriter object
 
     # Main loop to read frames from the camera and save them.
