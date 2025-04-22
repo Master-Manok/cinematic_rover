@@ -46,9 +46,27 @@ def record():
 
         if facedetection_state:
             dx,dy= dtf.loc_face(frame,frame_width,frame_height)
-            x_dir= True if (dx>=0) else False
-            y_dir= False if (dy>=0) else True
-            face_align[0]= (abs(round(dx*scale_x)), abs(round(dy*scale_y)))
+            x_dir= False if (dx>=0) else True
+            y_dir= True if (dy>=0) else False
+            dx= abs(round(dx))
+            dy= abs(round(dy))
+            print(f"dx:{dx}, dy:{dy}")
+            if dx<10:
+                dx=0
+                scale_x=0.3
+            elif dx<50:
+                scale_x=0.1
+            else:
+                scale_x=0.3
+            if dy<10:
+                dy=0
+                scale_y=0.3
+            elif dy<50:
+                scale_y=0.1
+            else:
+                scale_y=0.3
+
+            face_align[0]= (round(dx*scale_x), round(dy*scale_y))
             face_align[1]= (x_dir,y_dir)
             #dtf.loc_face(frame,frame_width,frame_height)
 
