@@ -11,6 +11,7 @@ import os
 #global values
 record_state=False
 facedetection_state=False
+face_align=[(0,0),(False,False)]
 
 def main_cleanup():
     is_con.cleanup()
@@ -18,8 +19,9 @@ def main_cleanup():
     stepper.cleanup()
 
 def record():
-    global record_state, facedetection_state
-    scale_x=1, scale_y=1
+    global record_state, facedetection_state, face_align
+    scale_x=0.3
+    scale_y=0.3
 
     web_cam = cv.VideoCapture(0)
     if not web_cam.isOpened():
@@ -45,9 +47,10 @@ def record():
         if facedetection_state:
             dx,dy= dtf.loc_face(frame,frame_width,frame_height)
             x_dir= True if (dx>=0) else False
-            y_dir= True if (dy>=0) else False
-            stepper.rot_xy(round(abs(dx*scale_x)) ,x_dir)
-            stepper.rot_yz(round(abs(dy*scale_y)) , y_dir)
+            y_dir= False if (dy>=0) else True
+            face_align[0]= (abs(round(dx*scale_x)), abs(round(dy*scale_y)))
+            face_align[1]= (x_dir,y_dir)
+            #dtf.loc_face(frame,frame_width,frame_height)
 
         if not ret:
             print("Error: Could not read frame.")
@@ -167,13 +170,18 @@ def joystick():
                 if record_state and facedetection_state and (but not in [4,5]):
                     pygame.time.delay(10)
                     continue #skips the gamepad input events when recording started and facedetection enabled
-                if but == 4:
-                    record_state = not(record_state)
-                elif but == 5:
+                if but ==5 and but_state:
                     facedetection_state = not(facedetection_state)
+                #elif but == 5 and but_state:
+                #    facedetection_state = not(facedetection_state)
 
             rover.moment(axis,value)
-            stepper.rot(but,but_state)
+            if not(facedetection_state):
+                stepper.rot(but,but_state)
+            else:
+                stepper.rot_xy(face_align[0][0],face_align[1][0])
+                stepper.rot_yz(face_align[0][1],face_align[1][1])
+            
             # print("tick") # uncomment to see how often the loop runs.
             pygame.time.delay(10)  # Add a small delay to reduce CPU usage. 10milliseconds
 
