@@ -9,8 +9,8 @@ microstepping=1
 delay_s= 60.0/(steps_per_rev*speed)/microstepping
 
 #xy plane
-xy_dir= DigitalOutputDevice(2)
-xy_step= DigitalOutputDevice(3)
+xy_dir= DigitalOutputDevice(17)
+xy_step= DigitalOutputDevice(27)
 #yz plane
 yz_dir= DigitalOutputDevice(14)
 yz_step= DigitalOutputDevice(15)
