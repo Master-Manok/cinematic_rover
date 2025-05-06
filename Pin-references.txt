@@ -6,8 +6,8 @@ Rover Pins -
 
 Stepper Pins -
 //
-3--gpio2 ~dir
-5--gpio3 ~pulse
+11--gpio2 ~dir
+13--gpio3 ~pulse
 //
 8--gpio14 ~dir
 10--gpio15 ~pulse
