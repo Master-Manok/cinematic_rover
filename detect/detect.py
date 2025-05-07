@@ -3,7 +3,7 @@ import cv2 as cv
 center_color=(0,0,255)
 face_center_color=(0, 255, 255)
 
-path = r"/home/mpi/Vscodes/cinematic_rover/detect/haarcascade_frontalface_default.xml"
+path = r"/home/manoj/VScodes/cinematic_rover/detect/haarcascade_frontalface_default.xml"
 face_cascade = cv.CascadeClassifier(path)
 
 def draw(frame,para1,para2):
