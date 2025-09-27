@@ -24,7 +24,7 @@ def rot_xy(steps, direction):
         sleep(delay_s)
 
 def rot_yz(steps, direction):
-    yz_dir.value=direction
+    yz_dir.value=not(direction)
     for _ in range(steps):
         yz_step.on()
         sleep(delay_s)
